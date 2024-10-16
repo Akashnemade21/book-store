@@ -1,0 +1,20 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+*/dist/
+
+# dependencies
+*/node_modules
+
+# production
+*/build
+
+# debug
+npm-debug.log*
+
+# local env files
+*/.env*.local
+
+# vs code files
+*/.vscode
+
+# system fils
+.DS_Store
