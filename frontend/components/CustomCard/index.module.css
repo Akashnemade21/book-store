@@ -1,0 +1,17 @@
+.card_content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.image {
+  width: 60%;
+  height: 60%;
+}
+
+.rating_number {
+  display: flex;
+  align-items: center;
+}
