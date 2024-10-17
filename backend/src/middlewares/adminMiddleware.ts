@@ -11,9 +11,9 @@ export const adminMiddleware = async (
   res: Response,
   next: NextFunction
 ) => {
-  const resp: any = await getUserByIdInt(req.user?.id);
+  // const resp: any = await getUserByIdInt(req.user?.userType);
 
-  if (resp.userType === ROLE.admin) {
+  if (req.user?.userType === ROLE.admin) {
     next();
   } else {
     return res.status(403).json({ message: "Unauthorized access" });

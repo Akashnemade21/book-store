@@ -9,7 +9,7 @@ const router = Router();
 
 router.get("/", authMiddleware, adminMiddleware, getUsers);
 
-router.get("/:id", authMiddleware, adminMiddleware, getUserById);
+router.get("/:id", authMiddleware, getUserById);
 
 router.delete("/", authMiddleware, adminMiddleware, deleteUserById);
 

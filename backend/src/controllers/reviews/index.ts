@@ -89,7 +89,7 @@ export const getReviewByBookId = async (req: Request, res: Response) => {
 
     res.status(200).json({
       message: "Fetch successlful",
-      review: JSON.parse(JSON.stringify(review)),
+      reviews: JSON.parse(JSON.stringify(review)),
     });
   } catch (error) {
     res.status(500).json({ message: "Error fetching review", error });
