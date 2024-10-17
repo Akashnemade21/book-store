@@ -4,8 +4,8 @@ import { User } from "../../models";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-const generateToken = (userId: number) => {
-  return jwt.sign({ id: userId }, process.env.JWT_SECRET!, {
+const generateToken = (userId: number, userType: string) => {
+  return jwt.sign({ id: userId, userType: userType }, process.env.JWT_SECRET!, {
     expiresIn: "1h",
   });
 };
@@ -60,11 +60,18 @@ export const login = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    const token = generateToken(user.id);
+    const token = generateToken(user.id, user.userType);
 
     return res.status(200).json({
       message: "Login successful",
       token,
+      user: {
+        id: user.id,
+        userType: user.userType,
+        name: user.name,
+        email: user.email,
+        profilePic: user.profilePic,
+      },
     });
   } catch (error) {
     return res.status(500).json({ message: "Error logging in", error });

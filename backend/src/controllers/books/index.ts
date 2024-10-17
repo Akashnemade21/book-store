@@ -1,6 +1,6 @@
 import { Sequelize } from "sequelize";
 import { Request, Response } from "express";
-import { Book, Review } from "../../models";
+import { Book, Review, User } from "../../models";
 
 export const getBooks = async (req: Request, res: Response) => {
   try {
@@ -22,11 +22,6 @@ export const getBooks = async (req: Request, res: Response) => {
       group: ["Book.id"],
     });
 
-    // const booksList = await Book.findAll({
-    //   // include: {
-    //   //   model: Review,
-    //   // },
-    // });
     if (!booksList || !booksList.length) {
       return res.status(400).json({ message: "No books found" });
     }
@@ -65,7 +60,58 @@ export const getBookById = async (req: Request, res: Response) => {
   const bookId = req.params.id;
 
   try {
-    const book = await Book.findByPk(bookId, {});
+    const book = await Book.findByPk(bookId, {
+      attributes: [
+        "id",
+        "title",
+        "author",
+        "publicationDate",
+        "bookCover",
+        [Sequelize.fn("AVG", Sequelize.col("reviews.rating")), "rating"],
+        [Sequelize.fn("COUNT", Sequelize.col("reviews.id")), "reviewNum"],
+      ],
+      include: {
+        model: Review,
+        as: "reviews",
+        attributes: [],
+      },
+      group: ["Book.id"],
+    });
+
+    if (!book) {
+      return res.status(404).json({ message: "Book not found" });
+    }
+
+    res.status(200).json({
+      message: "Fetch successlful",
+      book: JSON.parse(JSON.stringify(book)),
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching book", error });
+  }
+};
+
+export const getBookByIdWithReviews = async (req: Request, res: Response) => {
+  const bookId = req.params.id;
+  try {
+    const book = await Book.findOne({
+      where: { id: bookId },
+      attributes: ["id", "title", "author", "publicationDate", "bookCover"],
+      include: [
+        {
+          model: Review,
+          as: "reviews",
+          attributes: ["id", "rating", "reviewText", "date"],
+          include: [
+            {
+              model: User,
+              attributes: ["id", "name"],
+            },
+          ],
+        },
+      ],
+      group: ["Book.id", "reviews.id"],
+    });
 
     if (!book) {
       return res.status(404).json({ message: "Book not found" });
