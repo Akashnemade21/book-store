@@ -1,5 +1,5 @@
 import { requestHandler } from '@/utils/apiUtils';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
   const reviewId = params.id;
@@ -7,8 +7,13 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 
   const body = JSON.stringify({ rating, reviewText, date });
 
-  await requestHandler(req, `/review/${reviewId}`, 'PUT', true, body);
+  const { data, success } = await requestHandler(req, `/review/${reviewId}`, 'PUT', true, body);
 
+  if (success) {
+    return NextResponse.json({ ...data, success: true });
+  } else {
+    return NextResponse.json({ message: 'API failed', data, success: false });
+  }
   // const cookieHeader = req.headers.get('cookie');
 
   // let authToken: string = '';

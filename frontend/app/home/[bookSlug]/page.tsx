@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 import Image from 'next/image';
 
-import { Grid2 as Grid, Rating, Typography } from '@mui/material';
+import { CircularProgress, Grid2 as Grid, Rating, Typography } from '@mui/material';
 import { Add } from '@mui/icons-material';
 
 import { USERTYPE, VARIANT } from '@/utils/constants';
@@ -98,7 +98,7 @@ const BookDetail = ({
 
   const averageRating = reviewsList.reduce((total, review) => total + review.rating, 0) / reviewsList.length;
 
-  if (!bookData.title) return <p>Loading...</p>;
+  if (!bookData.title) return <CircularProgress />;
 
   return (
     <>

@@ -1,13 +1,18 @@
 import { requestHandler } from '@/utils/apiUtils';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   const { rating, bookId, reviewText, date } = await req.json();
 
   const body = JSON.stringify({ rating, bookId, reviewText, date });
 
-  await requestHandler(req, '/review', 'POST', false, body);
+  const { data, success } = await requestHandler(req, '/review', 'POST', false, body);
 
+  if (success) {
+    return NextResponse.json({ ...data, success: true });
+  } else {
+    return NextResponse.json({ message: 'API failed', data, success: false });
+  }
   // const cookieHeader = req.headers.get('cookie');
 
   // let authToken: string = '';

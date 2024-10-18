@@ -61,8 +61,8 @@ export const requestHandler = async (
 
     const data = await response.json();
 
-    return NextResponse.json({ ...data, success: true });
+    return { data: data, success: true };
   } catch (error) {
-    return NextResponse.json({ message: 'API failed', error, success: true });
+    return { data: error, success: false };
   }
 };

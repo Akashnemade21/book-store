@@ -7,7 +7,7 @@ export async function login({ email, password }: { email: string; password: stri
       },
       body: JSON.stringify({ email, password }),
     });
-    debugger;
+
     const data = await res.json();
     localStorage.setItem('user', JSON.stringify(data.user));
 
