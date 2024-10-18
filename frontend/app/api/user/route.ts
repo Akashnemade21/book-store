@@ -1,6 +1,11 @@
 import { requestHandler } from '@/utils/apiUtils';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
-  await requestHandler(req, '/user', 'GET', true);
+  const { data, success } = await requestHandler(req, '/user', 'GET', true);
+  if (success) {
+    return NextResponse.json({ ...data, success: true });
+  } else {
+    return NextResponse.json({ message: 'API failed', data, success: false });
+  }
 }

@@ -13,14 +13,14 @@ import { VARIANT } from '@/utils/constants';
 const Home = () => {
   return (
     <>
-      <Grid size={1}></Grid>
-      <Grid size={4}>
+      <Grid size={{ xs: 2, md: 1 }}></Grid>
+      <Grid size={{ xs: 8, md: 4 }}>
         <Image src={bookReview} className={classes.image} alt="Book Image" />
       </Grid>
-      <Grid container alignItems="center" size={6}>
-        <Grid size={1}></Grid>
-        <Grid size={10}>
-          <Typography variant="h2">Book Reviews</Typography>
+      <Grid container alignItems="center" size={{ xs: 8, md: 6 }}>
+        <Grid size={{ xs: 2, md: 1 }}></Grid>
+        <Grid size={{ xs: 10, md: 10 }}>
+          <Typography variant="h3">Book Reviews</Typography>
           <Typography variant="h5">Check out new books review on the books and what provide your review</Typography>
           <LinkButton className={classes.link_button} startIcon={<Login />} variant={VARIANT.contained}>
             <Link href="/login">Login</Link>
@@ -29,9 +29,9 @@ const Home = () => {
             <Link href="/signup">Sign Up</Link>
           </LinkButton>
         </Grid>
-        <Grid size={1}></Grid>
+        <Grid size={{ xs: 2, md: 1 }}></Grid>
       </Grid>
-      <Grid size={1}></Grid>
+      <Grid size={{ xs: 2, md: 1 }}></Grid>
     </>
   );
 };
