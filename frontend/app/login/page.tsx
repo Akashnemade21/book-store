@@ -12,16 +12,19 @@ import {
   TextField,
   Button,
   Typography,
+  CircularProgress,
 } from '@mui/material';
 
 import { login } from '@/utils/actions';
+import { userInterface } from '@/utils/interface';
 
-export default function LoginForm() {
+const LoginForm = () => {
   const router = useRouter();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [invalidLogin, setInvalidLogin] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleCancel = () => {
     router.push('/');
@@ -30,16 +33,19 @@ export default function LoginForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    setLoading(true);
     const result: {
       success: boolean;
       token: string;
+      user: userInterface;
     } = await login({ email, password });
+
     if (result.success) {
-      localStorage.setItem('authToken', result.token);
       router.push('/home');
     } else {
       setInvalidLogin(true);
     }
+    setLoading(false);
   };
 
   return (
@@ -78,9 +84,11 @@ export default function LoginForm() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancel}>Cancel</Button>
-          <Button type="submit">Login</Button>
+          <Button type="submit">{loading ? <CircularProgress /> : 'Login'}</Button>
         </DialogActions>
       </form>
     </Dialog>
   );
-}
+};
+
+export default LoginForm;

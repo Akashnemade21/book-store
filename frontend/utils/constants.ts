@@ -3,3 +3,8 @@ export const enum VARIANT {
   outlined = 'outlined',
   contained = 'contained',
 }
+
+export const enum USERTYPE {
+  admin = 'admin',
+  regular = 'regular',
+}

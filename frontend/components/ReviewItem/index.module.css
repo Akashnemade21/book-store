@@ -1,0 +1,8 @@
+.list_items {
+  display: -webkit-inline-box;
+  align-items: center;
+}
+
+.item_date {
+  margin-left: auto;
+}

@@ -9,12 +9,15 @@ interface ButtonProp {
   startIcon?: ReactNode;
   endIcon?: ReactNode;
   variant?: VARIANT;
+  onClick?: () => void;
 }
 
-export default function LinkButton({ children, className, startIcon, endIcon, variant }: ButtonProp) {
+const LinkButton = ({ children, className, startIcon, endIcon, variant, onClick }: ButtonProp) => {
   return (
-    <Button className={className} startIcon={startIcon} endIcon={endIcon} variant={variant}>
+    <Button className={className} startIcon={startIcon} endIcon={endIcon} variant={variant} onClick={onClick}>
       {children}
     </Button>
   );
-}
+};
+
+export default LinkButton;

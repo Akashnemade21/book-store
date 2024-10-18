@@ -13,15 +13,17 @@ import {
   TextField,
   Button,
   Typography,
+  CircularProgress,
 } from '@mui/material';
 
-export default function SignUpModal() {
+const SignUpModal = () => {
   const router = useRouter();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [invalidPassword, setInvaliPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleCancel = () => {
     router.push('/');
@@ -30,6 +32,7 @@ export default function SignUpModal() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    setLoading(true);
     const result: {
       success: boolean;
     } = await signup({ name, email, password });
@@ -38,6 +41,7 @@ export default function SignUpModal() {
     } else {
       setInvaliPassword(true);
     }
+    setLoading(false);
   };
 
   return (
@@ -53,7 +57,7 @@ export default function SignUpModal() {
           id="name"
           name="name"
           label="Name"
-          type="name"
+          type="text"
           fullWidth
           variant="standard"
           value={name}
@@ -89,8 +93,10 @@ export default function SignUpModal() {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleCancel}>Cancel</Button>
-        <Button type="submit">Sign Up</Button>
+        <Button type="submit">{loading ? <CircularProgress /> : 'Sign Up'}</Button>
       </DialogActions>
     </Dialog>
   );
-}
+};
+
+export default SignUpModal;
