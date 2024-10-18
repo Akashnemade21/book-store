@@ -1,31 +1,13 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Button, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 
-import { USERTYPE } from '@/utils/constants';
-import { userInterface } from '@/utils/interface';
-
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
-  const [user, setUser] = useState<userInterface>({
-    id: '',
-    name: '',
-    email: '',
-    userType: USERTYPE.regular,
-    profilePic: '',
-  });
-
-  useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem('user') || '{}');
-
-    if (userData.id) {
-      setUser(userData);
-    }
-  }, []);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -36,7 +18,7 @@ function ResponsiveAppBar() {
   };
 
   const pathname = usePathname();
-  const pages = pathname === '/' ? [] : user.id ? ['Logout'] : [];
+  const pages = ['/', '/login', '/signup'].includes(pathname) ? [] : ['Logout'];
 
   return (
     <AppBar position="static" color="primary">
