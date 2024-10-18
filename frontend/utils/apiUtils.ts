@@ -1,48 +1,68 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+export const apiBaseUrl = process.env.BACKEND_URL;
 
-// Utility to handle GET requests
-export const get = async (endpoint: string, options?: RequestInit) => {
-  try {
-    const res = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: 'GET',
-      headers: {
+import { NextRequest, NextResponse } from 'next/server';
+
+export const requestHandler = async (
+  req: NextRequest,
+  apiUrl: string,
+  method: string,
+  requireAuth: boolean,
+  body?: string,
+) => {
+  let headers: {
+    'Content-Type': string;
+    Authorization?: string;
+  } = { 'Content-Type': 'application/json' };
+
+  if (requireAuth) {
+    const cookieHeader = req.headers.get('cookie');
+
+    let authToken: string = '';
+    if (cookieHeader) {
+      const cookies = cookieHeader.split('; ').reduce(
+        (acc, cookie) => {
+          const [name, value] = cookie.split('=');
+          acc[name] = value;
+          return acc;
+        },
+        {} as Record<string, string>,
+      );
+
+      authToken = cookies['authToken'];
+      headers = {
         'Content-Type': 'application/json',
-        ...(options?.headers || {}),
-      },
-      ...options,
-    });
-
-    if (!res.ok) {
-      throw new Error(`Error: ${res.statusText}`);
+        Authorization: authToken,
+      };
     }
-
-    return await res.json();
-  } catch (error) {
-    console.error(error);
-    throw error;
   }
-};
 
-// Utility to handle POST requests
-export const post = async (endpoint: string, data: any, options?: RequestInit) => {
+  let requestConfig: {
+    method: string;
+    headers: {
+      'Content-Type': string;
+      Authorization?: string;
+    };
+    body?: string;
+  } = {
+    method: method,
+    headers: headers,
+  };
+
+  if (method !== 'GET') {
+    requestConfig = {
+      method: method,
+      headers: headers,
+      body: body,
+    };
+  }
+
   try {
-    const res = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(options?.headers || {}),
-      },
-      body: JSON.stringify(data),
-      ...options,
-    });
+    const response = await fetch(`${apiBaseUrl}${apiUrl}`, requestConfig);
 
-    if (!res.ok) {
-      throw new Error(`Error: ${res.statusText}`);
-    }
+    const data = await response.json();
 
-    return await res.json();
+    return NextResponse.json({ ...data, success: true });
   } catch (error) {
-    console.error(error);
-    throw error;
+    return NextResponse.json({ message: 'API failed', error, success: true });
   }
 };

@@ -1,30 +1,29 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
-import { Card, CardContent, Typography, CardActionArea, Rating } from '@mui/material';
+import { Card, CardContent, Typography, CardActionArea, Rating, CircularProgress, IconButton } from '@mui/material';
+import { Delete, Edit } from '@mui/icons-material';
 
 import book from '@/assets/book.png';
 import classes from './index.module.css';
-import Link from 'next/link';
+import { bookInterface } from '@/utils/interface';
+import { formateDate } from '@/utils/utils';
+import LinkButton from '../LinkButton';
 
-interface cardProps {
-  title: string;
-  author: string;
-  publicationDate: string;
-  rating: string;
-  reviewNum: number;
-  imageLink?: string;
-  id: string;
+interface CustomCardProps extends bookInterface {
+  adminUser: boolean;
 }
 
-const CustomCard = ({
-  title = 'Book Title',
-  author = 'Author',
-  publicationDate = 'DD/MM/YYYY',
-  rating = '0',
+const BookCard = ({
+  title = '',
+  author = '',
+  publicationDate = '',
+  rating = '',
   reviewNum = 0,
   imageLink = '',
   id = '',
-}: cardProps) => {
+  adminUser = false,
+}: CustomCardProps) => {
   return (
     <Card sx={{ maxWidth: 345 }}>
       <Link href={`/home/${id}`}>
@@ -32,15 +31,26 @@ const CustomCard = ({
           <CardContent className={classes.card_content}>
             <Image src={imageLink ? imageLink : book} className={classes.image} alt="Book store Image" />
             <Typography variant="h6">{title}</Typography>
-            <Typography variant="subtitle1" className={classes.rating_number}>
-              <Rating defaultValue={Number(rating)} readOnly /> &nbsp; ({reviewNum})
+            <Typography variant="subtitle1" className="rating_number">
+              <Rating value={Number(rating)} readOnly /> &nbsp; ({reviewNum})
             </Typography>
-            <Typography variant="subtitle1">Auther: {author}</Typography>
-            <Typography variant="subtitle1">Publication Date: {publicationDate}</Typography>
+            <Typography variant="subtitle1">Author: {author}</Typography>
+            <Typography variant="subtitle1">Publication Date: {formateDate(publicationDate)}</Typography>
           </CardContent>
         </CardActionArea>
       </Link>
+      {adminUser && (
+        <CardContent className={classes.admin_content}>
+          <IconButton aria-label="delete" size="large" className={classes.admin_button}>
+            <Delete fontSize="inherit" />
+          </IconButton>
+          <IconButton aria-label="delete" size="large" className={classes.admin_button}>
+            <Edit fontSize="inherit" />
+          </IconButton>
+        </CardContent>
+      )}
     </Card>
   );
 };
-export default CustomCard;
+
+export default BookCard;
